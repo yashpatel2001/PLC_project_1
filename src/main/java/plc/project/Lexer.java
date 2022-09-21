@@ -29,11 +29,12 @@ public final class Lexer {
      */
     public List<Token> lex() {
         List<Token> lex= new ArrayList<Token>();
-        if(!(match("[\b\n\r\t]"))) {
-            lex.add(lexToken());
-        }
-        else {
-            chars.advance();
+        while(chars.index!= chars.length) {
+            if (!(match("[\b\n\r\t]"))) {
+                lex.add(lexToken());
+            } else {
+                chars.advance();
+            }
         }
         return lex;
         //throw new UnsupportedOperationException(); //TODO
