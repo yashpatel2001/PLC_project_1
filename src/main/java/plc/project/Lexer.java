@@ -29,8 +29,8 @@ public final class Lexer {
      */
     public List<Token> lex() {
         List<Token> lex= new ArrayList<Token>();
-        while(chars.index!= chars.length) {
-            if (!(match("[\b\n\r\t]"))) {
+        while(chars.has(0)) {
+            if (!(match("\\b", "\\n","\\t","\\r"))) {
                 lex.add(lexToken());
             } else {
                 chars.advance();
