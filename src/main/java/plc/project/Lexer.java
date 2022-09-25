@@ -1,5 +1,6 @@
 package plc.project;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,14 +31,13 @@ public final class Lexer {
     public List<Token> lex() {
         List<Token> lex= new ArrayList<Token>();
         while(chars.has(0)) {
-            if (!(match("\\b", "\\n","\\t","\\r"))) {
+            if (!(match("(\b|\n|\r|\t|\\s)+"))) {
                 lex.add(lexToken());
             } else {
-                chars.advance();
+                chars.skip();
             }
         }
         return lex;
-        //throw new UnsupportedOperationException(); //TODO
     }
 
     /**
@@ -49,31 +49,128 @@ public final class Lexer {
      * by {@link #lex()}
      */
     public Token lexToken() {
-        throw new UnsupportedOperationException(); //TODO
+        if(peek("(@|[A-Za-z])"))
+            return lexIdentifier();
+        else if(peek("[-|0-9]"))
+            return lexNumber();
+        else if(peek("'"))
+            return lexCharacter();
+        else if(peek("\""))
+            return lexString();
+        return lexOperator();
     }
 
     public Token lexIdentifier() {
-        throw new UnsupportedOperationException(); //TODO
+        match("(@|[A-Za-z])");
+        while(match("[A-Za-z0-9_-]"));
+        return chars.emit(Token.Type.IDENTIFIER);
     }
 
     public Token lexNumber() {
-        throw new UnsupportedOperationException(); //TODO
+        if(peek("-"))
+            match("-");
+
+        if(peek("0"))
+        {
+            match("0");
+            if(!peek("\\.","[0-9]"))
+                return chars.emit(Token.Type.INTEGER);
+            else
+                match(".");
+
+            while(match("[0-9]"));
+            return chars.emit(Token.Type.DECIMAL);
+        }
+        else if(peek("[1-9]"))
+        {
+            int decimal = 0;
+            match("[1-9]");
+            while(peek("([0-9]|\\.)"))
+            {
+                if(peek("\\."))
+                {
+                    decimal++;
+                    if(decimal > 1)
+                        return chars.emit(Token.Type.DECIMAL);
+                    if(!peek("\\.","[0-9]"))
+                        return chars.emit(Token.Type.INTEGER);
+                    else
+                        match("\\.");
+                }
+                match("([0-9])");
+            }
+            if(decimal > 0)
+                return chars.emit(Token.Type.DECIMAL);
+
+            return chars.emit(Token.Type.INTEGER);
+        }
+
+        return chars.emit(Token.Type.OPERATOR);
     }
 
     public Token lexCharacter() {
-        throw new UnsupportedOperationException(); //TODO
+        if(!peek("'","."))
+            throw new ParseException("Invalid String",chars.index);
+        match("'");
+        if(peek("[^'\\\\]","'"))
+        {
+            match("[^'\\\\]","'");
+            return chars.emit(Token.Type.CHARACTER);
+        }
+        else if(peek("\\\\"))
+        {
+            match("\\\\");
+            if(peek("[bnrt\\\\\"']"))
+            {
+                match("[bnrt\\\\\"']");
+                if(peek("'"))
+                {
+                    match("'");
+                    return chars.emit(Token.Type.CHARACTER);
+                }
+                else
+                    throw new ParseException("Invalid Character", chars.index);
+            }
+            else
+                throw new ParseException("Invalid Character", chars.index);
+        }
+        throw new ParseException("Invalid Character", chars.index);
     }
 
     public Token lexString() {
-        throw new UnsupportedOperationException(); //TODO
+        if(!peek("\"","."))
+            throw new ParseException("Invalid String",chars.index);
+        match("\"");
+        while(peek("[^\"]"))
+        {
+            lexEscape();
+            match(".");
+        }
+        if(!match("\""))
+            throw new ParseException("Invalid String", chars.index);
+        return chars.emit(Token.Type.STRING);
     }
 
     public void lexEscape() {
-        throw new UnsupportedOperationException(); //TODO
+        if(peek("\\\\")) {
+            match("\\\\");
+            if (peek("[^bnrt'\"\\\\]"))
+                throw new ParseException("Invalid String", chars.index);
+        }
     }
 
     public Token lexOperator() {
-        throw new UnsupportedOperationException(); //TODO
+        if(peek("!","="))
+            match("!","=");
+        else if(peek("=","="))
+            match("=","=");
+        else if(peek("&","&"))
+            match("&","&");
+        else if(peek("|","|"))
+            match("|","|");
+        else
+            match(".");
+        return chars.emit(Token.Type.OPERATOR);
     }
 
     /**
