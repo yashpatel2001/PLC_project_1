@@ -134,6 +134,10 @@ public final class Lexer {
             else
                 throw new ParseException("Invalid Character", chars.index);
         }
+        else if(peek("'"))
+            throw new ParseException("Invalid Character", chars.index);
+        else
+            match(".");
         throw new ParseException("Invalid Character", chars.index);
     }
 
