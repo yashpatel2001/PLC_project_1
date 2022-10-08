@@ -327,7 +327,16 @@ public final class Parser {
               }
           }
           else if(peek("(")) {
-
+               match("(");
+                try {
+                    Ast.Expression expr=parseExpression();
+                    peek(")");
+                    match(")");
+                    return new Ast.Expression.Group(expr);
+                }
+                catch(ParseException p) {
+                    throw new ParseException("no closing parentheses or expression inside group", tokens.get(0).getIndex());
+                }
           }
           throw new ParseException("not a primary expression", tokens.get(0).getIndex());
     }
