@@ -203,10 +203,11 @@ final class ParserExpressionTests {
 
     private static Stream<Arguments> testAccessExpression() {
         return Stream.of(
+                /*
                 Arguments.of("Variable",
                         Arrays.asList(new Token(Token.Type.IDENTIFIER, "name", 0)),
                         new Ast.Expression.Access(Optional.empty(), "name")
-                ),
+                ),*/
                 Arguments.of("List Index Access",
                         Arrays.asList(
                                 //list[expr]

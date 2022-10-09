@@ -1,5 +1,6 @@
 package plc.project;
 
+import javax.swing.text.html.Option;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -315,8 +316,12 @@ public final class Parser {
                    //insert else
               }
               else if(peek("[")) {
+                    match("[");
                     try{
-
+                        Ast.Expression list_expr= parseExpression();
+                        peek("]");
+                        match("]");
+                        return new Ast.Expression.Access(Optional.of(list_expr),identifier);
                     }
                     catch(ParseException p) {
                         throw new ParseException("no closing parentheses or expression inside list", tokens.get(0).getIndex());
