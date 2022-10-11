@@ -58,7 +58,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
   }
 }</component>
-  <component name="RunManager" selected="Gradle.ParserExpressionTests.testAccessExpression">
+  <component name="RunManager" selected="Gradle.ParserExpressionTests.testFunctionExpression">
     <configuration name="ParserExpressionTests.testAccessExpression" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -82,7 +82,7 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="ParserExpressionTests.testAssignmentStatement" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="ParserExpressionTests.testBinaryExpression" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -95,30 +95,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;plc.project.ParserExpressionTests.testAssignmentStatement&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
-    <configuration name="ParserExpressionTests.testExpressionStatement" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;plc.project.ParserExpressionTests.testExpressionStatement&quot;" />
+            <option value="&quot;plc.project.ParserExpressionTests.testBinaryExpression&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -142,6 +119,29 @@
             <option value=":test" />
             <option value="--tests" />
             <option value="&quot;plc.project.ParserExpressionTests.testFunctionExpression&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="ParserExpressionTests.testGroupExpression" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;plc.project.ParserExpressionTests.testGroupExpression&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -176,11 +176,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.ParserExpressionTests.testAccessExpression" />
-        <item itemvalue="Gradle.ParserExpressionTests.testLiteralExpression" />
-        <item itemvalue="Gradle.ParserExpressionTests.testAssignmentStatement" />
-        <item itemvalue="Gradle.ParserExpressionTests.testExpressionStatement" />
         <item itemvalue="Gradle.ParserExpressionTests.testFunctionExpression" />
+        <item itemvalue="Gradle.ParserExpressionTests.testAccessExpression" />
+        <item itemvalue="Gradle.ParserExpressionTests.testBinaryExpression" />
+        <item itemvalue="Gradle.ParserExpressionTests.testGroupExpression" />
+        <item itemvalue="Gradle.ParserExpressionTests.testLiteralExpression" />
       </list>
     </recent_temporary>
   </component>
