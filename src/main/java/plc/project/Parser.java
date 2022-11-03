@@ -205,7 +205,7 @@ public final class Parser {
      */
     public List<Ast.Statement> parseBlock() throws ParseException {
         List<Ast.Statement> parseStatements=new ArrayList<Ast.Statement>();
-        while(tokens.has(0)) {
+        while((!match("END") ||!match("ELSE")|| !match("DEFAULT"))) {
             parseStatements.add(parseStatement());
             if(peek("END") || peek("ELSE")|| peek("DEFAULT")) {
                 return parseStatements;
@@ -220,7 +220,6 @@ public final class Parser {
      * statement, then it is an expression/assignment statement.
      */
     public Ast.Statement parseStatement() throws ParseException {
-
         if(match("LET")) {
             return parseDeclarationStatement();
         }
@@ -243,7 +242,7 @@ public final class Parser {
             // peeks & advances if there is an equal sign then checks if there is no semicolon
             if (!match("=")) {
                 if (!match(";")) {
-                    throw new ParseException("no semicolon after expression", (tokens.get(-1).getIndex() + tokens.get(-1).getLiteral().length()));
+                    throw new ParseException("no kjsemicolon after expression", (tokens.get(-1).getIndex() + tokens.get(-1).getLiteral().length()));
                 }
                 //returns just the lhs
                 return new Ast.Statement.Expression(lhs);
@@ -397,10 +396,10 @@ public final class Parser {
      * {@code WHILE}.
      */
     public Ast.Statement.While parseWhileStatement() throws ParseException {
-        if (match("DO"))
-            throw new ParseException("No condition", tokens.get(0).getIndex());
+        //match("WHILE");
         Ast.Expression expr=parseExpression();
         List<Ast.Statement> statements = new ArrayList<>();
+        System.out.println(tokens.get(0).getLiteral());
         if (!match("DO"))
             throw new ParseException("No DO after the condition", tokens.get(0).getIndex());
 
@@ -604,8 +603,13 @@ public final class Parser {
                           Ast.Expression added_expr=parseExpression();
                           arguments.add(added_expr);
                       }
-                      return new Ast.Expression.Function(identifier,arguments);
-
+                      if (match(")")){
+                          return new Ast.Expression.Function(identifier,arguments);
+                      }
+                      else {
+                          //Throw parse error, no ending parentheses TODO
+                          throw new ParseException("No ending Parenthesis", tokens.get(0).getIndex());
+                      }
                   }
 
               }
