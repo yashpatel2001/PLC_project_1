@@ -106,7 +106,7 @@ public class Interpreter implements Ast.Visitor<Environment.PlcObject> {
             {
                 Scope scope1=null;
                 scope1=scope;
-
+                Object replace=ast.getValue();
                 Object list= null;
                 //Object index=((Ast.Expression.Access) ast.getReceiver()).getOffset().get();
                 Environment.PlcObject s= visit(((Ast.Expression.Access) ast.getReceiver()).getOffset().get());
@@ -122,7 +122,11 @@ public class Interpreter implements Ast.Visitor<Environment.PlcObject> {
                //Object list_val=scopeFind.getValue();
 
                 List<BigInteger> list_assignment= (List<BigInteger>) list;
-
+                /*for(int k=0; k<list_assignment.size();k++) {
+                    if(k==i) {
+                        list_assignment[k]=
+                    }
+                }*/
                // scope1.lookupVariable(((Ast.Expression.Access) ast.getReceiver()).getName()).setValue();
 
                // Object list_val= s.getValue();
