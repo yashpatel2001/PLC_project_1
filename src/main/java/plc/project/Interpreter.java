@@ -105,14 +105,30 @@ public class Interpreter implements Ast.Visitor<Environment.PlcObject> {
             if(((Ast.Expression.Access) ast.getReceiver()).getOffset().isPresent())
             {
                 Scope scope1=null;
-                scope1=scope.getParent();
+                scope1=scope;
 
-                Object list= scope1;
-                Object index=ast.getReceiver();
-                Environment.Variable var= scope.lookupVariable(((Ast.Expression.Access) ast.getReceiver()).getName());
-                Environment.PlcObject s= var.getValue();
-                Object list_val= s.getValue();
-                String scope_obj = scope.lookupVariable(String.valueOf((Ast.Expression.Access) ast.getReceiver())).getName();
+                Object list= null;
+                //Object index=((Ast.Expression.Access) ast.getReceiver()).getOffset().get();
+                Environment.PlcObject s= visit(((Ast.Expression.Access) ast.getReceiver()).getOffset().get());
+                Object l=s.getValue();
+                Integer i= Integer.valueOf(String.valueOf((BigInteger)l));
+                Environment.PlcObject find= scope1.lookupVariable(((Ast.Expression.Access) ast.getReceiver()).getName()).getValue();
+                list=find.getValue();
+                //Object list_val = scope1.getValue();
+                //List<BigInteger> bigIntArrayList= (List<BigInteger>) list_val;
+                //scope1.lookupVariable(((Ast.Expression.Access) ast.getReceiver()).getName()).setValue();
+
+                //Environment.PlcObject scopeFind = scope.lookupVariable(((Ast.Expression.Access) ast.getReceiver()).getName()).getValue();
+               //Object list_val=scopeFind.getValue();
+
+                List<BigInteger> list_assignment= (List<BigInteger>) list;
+
+               // scope1.lookupVariable(((Ast.Expression.Access) ast.getReceiver()).getName()).setValue();
+
+               // Object list_val= s.getValue();
+
+
+                scope=scope1;
                 return Environment.NIL;
 
 
@@ -156,6 +172,7 @@ public class Interpreter implements Ast.Visitor<Environment.PlcObject> {
 
     @Override
     public Environment.PlcObject visit(Ast.Statement.Switch ast) {
+
         throw new UnsupportedOperationException(); //TODO
     }
 
@@ -368,8 +385,8 @@ public class Interpreter implements Ast.Visitor<Environment.PlcObject> {
            }
         }
         else {
-            object_access=Environment.create(ast.getName());
-            return object_access;
+            Environment.PlcObject scope1 = scope.lookupVariable(ast.getName()).getValue();
+            return scope1;
         }
 
     }
@@ -379,7 +396,12 @@ public class Interpreter implements Ast.Visitor<Environment.PlcObject> {
             if(ast.getArguments().size()==0) {
                 return Environment.create(ast.getName());
             }
-            return Environment.NIL;
+            List<Environment.PlcObject> list= new ArrayList<>();
+
+            for(int i=0;i<ast.getArguments().size();i++) {
+                list.add(visit(ast.getArguments().get(i)));
+            }
+            return scope.lookupFunction(ast.getName(),ast.getArguments().size()).invoke(list);
     }
 
     @Override

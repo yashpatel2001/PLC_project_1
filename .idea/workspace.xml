@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="5d68643e-ae45-4a7c-8a7a-2ff96f3502ce" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/plc/project/Ast.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/plc/project/Ast.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/plc/project/Parser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/P3.zip" beforeDir="false" afterPath="$PROJECT_DIR$/P3.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/plc/project/Interpreter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/plc/project/Interpreter.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +58,30 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
   }
 }</component>
-  <component name="RunManager" selected="Gradle.InterpreterTests">
+  <component name="RunManager" selected="Gradle.InterpreterTests.testListAssignmentStatement">
+    <configuration name="InterpreterBaselineTests" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;plc.project.InterpreterBaselineTests&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
     <configuration name="InterpreterTests" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -151,36 +174,13 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="InterpreterTests.testLiteralExpression" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;plc.project.InterpreterTests.testLiteralExpression&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.InterpreterTests" />
-        <item itemvalue="Gradle.InterpreterTests.testFunctionExpression" />
         <item itemvalue="Gradle.InterpreterTests.testListAssignmentStatement" />
+        <item itemvalue="Gradle.InterpreterBaselineTests" />
+        <item itemvalue="Gradle.InterpreterTests" />
         <item itemvalue="Gradle.InterpreterTests.testExpressionStatement" />
-        <item itemvalue="Gradle.InterpreterTests.testLiteralExpression" />
+        <item itemvalue="Gradle.InterpreterTests.testFunctionExpression" />
       </list>
     </recent_temporary>
   </component>
@@ -223,8 +223,8 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/plc/project/Interpreter.java</url>
-          <line>111</line>
-          <option name="timeStamp" value="15" />
+          <line>104</line>
+          <option name="timeStamp" value="41" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -236,5 +236,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/PLC_project_1$LexerTests_testExamples.ic" NAME="LexerTests.testExamples Coverage Results" MODIFIED="1663870736273" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/Parser_2__java$InterpreterBaselineTests_testFunctionCall.ic" NAME="InterpreterBaselineTests.testFunctionCall Coverage Results" MODIFIED="1667586517911" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
