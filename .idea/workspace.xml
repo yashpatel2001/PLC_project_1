@@ -58,7 +58,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
   }
 }</component>
-  <component name="RunManager" selected="Gradle.InterpreterTests.testListAssignmentStatement">
+  <component name="RunManager" selected="Gradle.InterpreterBaselineTests">
     <configuration name="InterpreterBaselineTests" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -176,9 +176,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.InterpreterTests.testListAssignmentStatement" />
         <item itemvalue="Gradle.InterpreterBaselineTests" />
         <item itemvalue="Gradle.InterpreterTests" />
+        <item itemvalue="Gradle.InterpreterTests.testListAssignmentStatement" />
         <item itemvalue="Gradle.InterpreterTests.testExpressionStatement" />
         <item itemvalue="Gradle.InterpreterTests.testFunctionExpression" />
       </list>
