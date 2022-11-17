@@ -245,11 +245,6 @@
           <line>104</line>
           <option name="timeStamp" value="41" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/plc/project/Analyzer.java</url>
-          <line>303</line>
-          <option name="timeStamp" value="42" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <pin-to-top-manager>
