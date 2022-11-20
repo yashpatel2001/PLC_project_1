@@ -291,20 +291,53 @@ public final class Analyzer implements Ast.Visitor<Void> {
 
     @Override
     public Void visit(Ast.Expression.Access ast) {
-        throw new UnsupportedOperationException();  // TODO
+        if(ast.getOffset().isPresent()) {
+            if (ast.getOffset().get().getType() != Environment.Type.INTEGER) {
+                visit(ast.getOffset().get());
+
+                return null;
+            } else {
+                throw new RuntimeException();
+            }
+        }
+        else {
+
+            return null;
+        }
     }
 
     @Override
     public Void visit(Ast.Expression.Function ast) {
-        throw new UnsupportedOperationException();  // TODO
+        try {
+            List<Ast.Expression> args = ast.getArguments();
+            for (int i = 0; i < args.size(); i++) {
+                visit(ast.getArguments().get(i));
+            }
+            Environment.Function lookup = scope.lookupFunction(ast.getName(), ast.getArguments().size());
+            for(int i=0;i<args.size();i++) {
+                requireAssignable(lookup.getParameterTypes().get(i),ast.getArguments().get(i).getType());
+            }
+            ast.setFunction(lookup);
+            return null;
+        }
+        catch(RuntimeException e) {
+            throw new RuntimeException();
+        }
     }
 
     @Override
     public Void visit(Ast.Expression.PlcList ast) {
-        for(int i=0; i<ast.getValues().size();i++) {
-            requireAssignable(ast.getType(),ast.getValues().get(i).getType());
+        try {
+            for (int i = 0; i < ast.getValues().size(); i++) {
+                visit(ast.getValues().get(i));
+            }
+            for (int i = 0; i < ast.getValues().size(); i++) {
+                requireAssignable(ast.getValues().get(i).getType(), ast.getType());
+            }
+            return null;
+        }catch(RuntimeException e) {
+            throw new RuntimeException();
         }
-        return null;
     }
 
     public static void requireAssignable(Environment.Type target, Environment.Type type) {
