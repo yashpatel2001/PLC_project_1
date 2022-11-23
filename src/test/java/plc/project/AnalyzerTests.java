@@ -93,7 +93,11 @@ public final class AnalyzerTests {
                         // VAR name: Unknown;
                         new Ast.Global("name", "Unknown", true, Optional.empty()),
                         null
+                ),
+                Arguments.of("List",new Ast.Global("list", "Integer", true, Optional.of(new Ast.Expression.PlcList(Arrays.asList(new Ast.Expression.Literal(new BigInteger("1")), new Ast.Expression.Literal(new BigInteger("2")),new Ast.Expression.Literal(new BigInteger("3")))))),
+                        null
                 )
+
         );
     }
 
@@ -304,6 +308,7 @@ public final class AnalyzerTests {
 
     private static Stream<Arguments> testSwitchStatement() {
         return Stream.of(
+
                 Arguments.of("Condition Value Type Match",
                         // SWITCH letter CASE 'y': print("yes"); letter = 'n'; DEFAULT print("no"); END
                         new Ast.Statement.Switch(
@@ -356,7 +361,7 @@ public final class AnalyzerTests {
                                         )
                                 )
                         )
-                ),
+                ) ,
                 Arguments.of("Condition Value Type Mismatch",
                         // SWITCH number CASE 'y': print("yes"); letter = 'n'; DEFAULT: print("no"); END
                         new Ast.Statement.Switch(

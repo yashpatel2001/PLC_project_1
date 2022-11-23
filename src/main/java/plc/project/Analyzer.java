@@ -5,7 +5,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * See the specification for information about what the different visit
@@ -152,12 +151,46 @@ public final class Analyzer implements Ast.Visitor<Void> {
 
     @Override
     public Void visit(Ast.Statement.Switch ast) {
-        throw new UnsupportedOperationException();  // TODO
+          visit(ast.getCondition());
+          for(int i=0;i<ast.getCases().size()-1;i++) {
+              visit(ast.getCases().get(i).getValue().get());
+              if(ast.getCases().get(i).getValue().get().getType() !=ast.getCondition().getType()) {
+                  throw new RuntimeException();
+              }
+              try {
+                  scope=new Scope(scope);
+                  visit(ast.getCases().get(i));
+              }
+              finally {
+                  scope=scope.getParent();
+              }
+          }
+          int size= ast.getCases().size()-1;
+          if(ast.getCases().get(size).getValue().isPresent()) {
+              throw new RuntimeException();
+          }
+          try {
+              scope=new Scope(scope);
+              visit(ast.getCases().get(size));
+          }
+          finally {
+              scope=scope.getParent();
+          }
+
+          return null;
     }
 
     @Override
     public Void visit(Ast.Statement.Case ast) {
-        throw new UnsupportedOperationException();  // TODO
+        try {
+            for (int i = 0; i < ast.getStatements().size(); i++) {
+               visit(ast.getStatements().get(i));
+            }
+        }catch(RuntimeException e) {
+            throw new RuntimeException();
+        }
+        return null;
+
     }
 
     @Override
