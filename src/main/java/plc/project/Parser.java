@@ -82,20 +82,29 @@ public final class Parser {
         match("LIST");
         if(match(Token.Type.IDENTIFIER)) {
             name = tokens.get(-1).getLiteral();
-            if(match("=")) {
-                if(match("[")) {
-                    list.add(parseExpression());
-                    while(match(","))
-                        list.add(parseExpression());
-                    if(match("]"))
-                        return new Ast.Global(name, true, Optional.of(new Ast.Expression.PlcList(list)));
+            if(match(":")) {
+                if(match(Token.Type.IDENTIFIER)) {
+                    if (match("=")) {
+                        if (match("[")) {
+                            list.add(parseExpression());
+                            while (match(","))
+                                list.add(parseExpression());
+                            if (match("]"))
+                                return new Ast.Global(name, true, Optional.of(new Ast.Expression.PlcList(list)));
+                        } else {
+                            throw new ParseException("No array bracket", tokens.get(0).getIndex());
+                        }
+                    }
+                    else {
+                        throw new ParseException("No equal sign", tokens.get(0).getIndex());
+                    }
                 }
                 else {
-                    throw new ParseException("No array bracket", tokens.get(0).getIndex());
+                    throw new ParseException("No token identifier", tokens.get(0).getIndex());
                 }
             }
             else {
-                throw new ParseException("No equal sign", tokens.get(0).getIndex());
+                throw new ParseException("No semicolon sign", tokens.get(0).getIndex());
             }
         }
         else {
@@ -136,14 +145,18 @@ public final class Parser {
         match("VAL");
         if(match(Token.Type.IDENTIFIER)) {
             name = tokens.get(-1).getLiteral();
-            if(match("=")) {
-                if(!peek(";"))
-                    value = Optional.of(parseExpression());
-                else
-                    throw new ParseException("No value after equal",tokens.get(0).getIndex());
+            if(match(":")) {
+                if (match("=")) {
+                    if (!peek(";"))
+                        value = Optional.of(parseExpression());
+                    else
+                        throw new ParseException("No value after equal", tokens.get(0).getIndex());
+                } else
+                    throw new ParseException("Invalid token after identifier", tokens.get(0).getIndex());
             }
-            else
+            else {
                 throw new ParseException("Invalid token after identifier", tokens.get(0).getIndex());
+            }
         }
         else {
             throw new ParseException("No identifier found", tokens.get(0).getIndex());
