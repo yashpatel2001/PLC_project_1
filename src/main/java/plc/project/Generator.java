@@ -63,7 +63,7 @@ public final class Generator implements Ast.Visitor<Void> {
     @Override
     public Void visit(Ast.Global ast) {
         print(ast.getVariable().getType().getJvmName(), " ",ast.getVariable().getJvmName());
-        if(!ast.getValue().isEmpty()){
+        if(ast.getValue().isPresent()){
             print(" = ", ast.getValue().get());
         }
         print(";");
@@ -129,11 +129,43 @@ public final class Generator implements Ast.Visitor<Void> {
 
     @Override
     public Void visit(Ast.Statement.Switch ast) {
+        print("switch (");
+        visit(ast.getCondition());
+        print(") {");
+        indent++;
+        for(int i=0;i<ast.getCases().size();i++) {
+            newline(indent);
+            visit(ast.getCases().get(i));
+        }
+        indent--;
+        newline(indent);
+        print("}");
         return null;
     }
 
     @Override
     public Void visit(Ast.Statement.Case ast) {
+        if (!ast.getValue().isEmpty()){
+            print("case ");
+            visit(ast.getValue().get());
+            print(":");
+            indent++;
+            for (int i=0; i<ast.getStatements().size();i++){
+                newline(indent);
+                visit(ast.getStatements().get(i));
+            }
+            newline(indent);
+            print("break;");
+        }
+        else{
+            print("default:");
+            indent++;
+            for (int i=0; i<ast.getStatements().size();i++){
+                newline(indent);
+                visit(ast.getStatements().get(i) );
+            }
+        }
+        indent--;
         return null;
     }
 
