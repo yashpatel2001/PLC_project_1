@@ -17,8 +17,7 @@ public final class Generator implements Ast.Visitor<Void> {
             if (object instanceof Ast) {
                 visit((Ast) object);
             } else {
-                if(!object.toString().equals("print") && !object.toString().equals("."))
-                     writer.write(object.toString());
+                writer.write(object.toString());
             }
         }
     }
@@ -62,12 +61,26 @@ public final class Generator implements Ast.Visitor<Void> {
 
     @Override
     public Void visit(Ast.Global ast) {
-        print(ast.getVariable().getType().getJvmName(), " ",ast.getVariable().getJvmName());
-        if(ast.getValue().isPresent()){
-            print(" = ", ast.getValue().get());
+        if(ast.getValue().isPresent() && ast.getValue().get().getClass().equals(Ast.Expression.PlcList.class)){
+            print(ast.getVariable().getType().getJvmName() + "[]" + " " + ast.getName());
+            print(" = ");
+            visit(ast.getValue().get());
+            print(";");
         }
-        print(";");
+        else {
+            if (!ast.getMutable())
+                print("final ");
+            print(ast.getVariable().getType().getJvmName() + " ");
+            print(ast.getName());
+            if (ast.getValue().isPresent()) {
+                print(" = ");
+                visit(ast.getValue().get());
+            }
+            print(";");
+        }
         return null;
+
+
     }
 
     @Override
@@ -145,7 +158,7 @@ public final class Generator implements Ast.Visitor<Void> {
 
     @Override
     public Void visit(Ast.Statement.Case ast) {
-        if (!ast.getValue().isEmpty()){
+        if (ast.getValue().isPresent()){
             print("case ");
             visit(ast.getValue().get());
             print(":");
@@ -254,7 +267,14 @@ public final class Generator implements Ast.Visitor<Void> {
 
     @Override
     public Void visit(Ast.Expression.PlcList ast) {
-        throw new UnsupportedOperationException(); //TODO
+        print("{");
+        visit(ast.getValues().get(0));
+        for (int i = 1; i < ast.getValues().size(); i++){
+            print(", ");
+            visit(ast.getValues().get(i));
+        }
+        print("}");
+        return null;
     }
 
     private Void printStatements(List<Ast.Statement> statements, Ast ast) {

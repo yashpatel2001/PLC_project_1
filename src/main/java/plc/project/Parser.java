@@ -78,19 +78,21 @@ public final class Parser {
      */
     public Ast.Global parseList() throws ParseException {
         String name = "";
+        String typename="";
         List<Ast.Expression> list = new ArrayList<>();
         match("LIST");
         if(match(Token.Type.IDENTIFIER)) {
             name = tokens.get(-1).getLiteral();
             if(match(":")) {
                 if(match(Token.Type.IDENTIFIER)) {
+                    typename = tokens.get(-1).getLiteral();
                     if (match("=")) {
                         if (match("[")) {
                             list.add(parseExpression());
                             while (match(","))
                                 list.add(parseExpression());
                             if (match("]"))
-                                return new Ast.Global(name, true, Optional.of(new Ast.Expression.PlcList(list)));
+                                return new Ast.Global(name,typename, true, Optional.of(new Ast.Expression.PlcList(list)));
                         } else {
                             throw new ParseException("No array bracket", tokens.get(0).getIndex());
                         }
@@ -120,19 +122,31 @@ public final class Parser {
      */
     public Ast.Global parseMutable() throws ParseException {
         String name = "";
+        String typeName="";
         Optional<Ast.Expression> value = Optional.empty();
         match("VAR");
         if(match(Token.Type.IDENTIFIER)) {
             name = tokens.get(-1).getLiteral();
-            if(match("=")) {
-                if(!peek(";"))
-                    value = Optional.of(parseExpression());
+            if(match(":")) {
+                if(match(Token.Type.IDENTIFIER)) {
+                    typeName=tokens.get(-1).getLiteral();
+                    if (match("=")) {
+                        if (!peek(";"))
+                            value = Optional.of(parseExpression());
+                    }
+                }
+                else {
+                    throw new ParseException("No identifier found", tokens.get(0).getIndex());
+                }
+            }
+            else {
+                throw new ParseException("No semicolon found", tokens.get(0).getIndex());
             }
         }
         else {
             throw new ParseException("No identifier found", tokens.get(0).getIndex());
         }
-        return new Ast.Global(name,true,value);
+        return new Ast.Global(name,typeName,true,value);
     }
 
     /**
@@ -141,27 +155,34 @@ public final class Parser {
      */
     public Ast.Global parseImmutable() throws ParseException {
         String name = "";
+        String typeName="";
         Optional<Ast.Expression> value = Optional.empty();
         match("VAL");
         if(match(Token.Type.IDENTIFIER)) {
             name = tokens.get(-1).getLiteral();
             if(match(":")) {
-                if (match("=")) {
-                    if (!peek(";"))
-                        value = Optional.of(parseExpression());
-                    else
-                        throw new ParseException("No value after equal", tokens.get(0).getIndex());
-                } else
+                if (match(Token.Type.IDENTIFIER)) {
+                    typeName=tokens.get(-1).getLiteral();
+                    if (match("=")) {
+                        if (!peek(";"))
+                            value = Optional.of(parseExpression());
+                        else
+                            throw new ParseException("No value after equal", tokens.get(0).getIndex());
+                    } else
+                        throw new ParseException("Invalid token after identifier", tokens.get(0).getIndex());
+                }
+                else {
                     throw new ParseException("Invalid token after identifier", tokens.get(0).getIndex());
+                }
+            }
+            else {
+                    throw new ParseException("Invalid token after identifier", tokens.get(0).getIndex());
+            }
             }
             else {
                 throw new ParseException("Invalid token after identifier", tokens.get(0).getIndex());
             }
-        }
-        else {
-            throw new ParseException("No identifier found", tokens.get(0).getIndex());
-        }
-        return new Ast.Global(name,false,value);
+        return new Ast.Global(name,typeName,false,value);
     }
 
     /**
@@ -170,10 +191,11 @@ public final class Parser {
      */
     public Ast.Function parseFunction() throws ParseException {
        match("FUN");
+       Optional<String> returnType=Optional.empty();
        String name = "";
        List<String> parameters = new ArrayList<>();
        List<Ast.Statement> statements = new ArrayList<>();
-
+       List<String> parameterTypeNames=new ArrayList<>();
        if(peek(Token.Type.IDENTIFIER)) {
            name = tokens.get(0).getLiteral();
            match(Token.Type.IDENTIFIER);
@@ -185,13 +207,30 @@ public final class Parser {
        if(peek(Token.Type.IDENTIFIER)) {
            parameters.add(tokens.get(0).getLiteral());
            match(Token.Type.IDENTIFIER);
-           while(match(",")) {
-               if(match(Token.Type.IDENTIFIER)) {
-                   parameters.add(tokens.get(0).getLiteral());
+           if(match(":")) {
+               if(peek(Token.Type.IDENTIFIER)) {
+                   parameterTypeNames.add(tokens.get(0).getLiteral());
+                   match((Token.Type.IDENTIFIER));
+                   while (match(",")) {
+                       if (match(Token.Type.IDENTIFIER)) {
+                           parameters.add(tokens.get(0).getLiteral());
+                       } else {
+                           throw new ParseException("not identifier or dangling comma", tokens.get(0).getIndex());
+                       }
+                       if(match(":")) {
+                           parameterTypeNames.add(tokens.get(0).getLiteral());
+                       }
+                       else {
+                           throw new ParseException("not identifier or dangling comma", tokens.get(0).getIndex());
+                       }
+                   }
                }
                else {
-                   throw new ParseException("not identifier or dangling comma", tokens.get(0).getIndex());
+                   throw new ParseException("not identifier or dangling comma/colon", tokens.get(0).getIndex());
                }
+           }
+           else {
+               throw new ParseException("not identifier or dangling comma/colon", tokens.get(0).getIndex());
            }
        }
         if(match(Token.Type.IDENTIFIER))
@@ -199,7 +238,17 @@ public final class Parser {
 
         if(!match(")"))
             throw new ParseException("no closing parenthesis", tokens.get(0).getIndex());
+        if(peek(":")) {
+           match(":");
+           if(peek(Token.Type.IDENTIFIER)) {
+               returnType= Optional.of(tokens.get(0).getLiteral());
+               match(Token.Type.IDENTIFIER);
+           }
+           else {
+               throw new ParseException("no identifier", tokens.get(0).getIndex());
+           }
 
+        }
         if(!match("DO"))
             throw new ParseException("no DO ", tokens.get(0).getIndex());
 
@@ -208,7 +257,7 @@ public final class Parser {
 
         if(!match("END"))
             throw new ParseException("no DO ", tokens.get(0).getIndex());
-        return new Ast.Function(name, parameters, statements);
+        return new Ast.Function(name, parameters,parameterTypeNames,returnType, statements);
     }
 
 
@@ -412,7 +461,6 @@ public final class Parser {
         //match("WHILE");
         Ast.Expression expr=parseExpression();
         List<Ast.Statement> statements = new ArrayList<>();
-        System.out.println(tokens.get(0).getLiteral());
         if (!match("DO"))
             throw new ParseException("No DO after the condition", tokens.get(0).getIndex());
 
